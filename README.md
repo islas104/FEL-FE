@@ -33,14 +33,10 @@ This project includes both the **frontend** and **backend** for the **Field Mapp
    ```bash
    npm install
    ```
-
-````
-
 3. Run the development server:
+
    ```bash
     npm run dev
    ```
 
 4. Open your browser and visit http://localhost:5173 to see the frontend in action.
-```
-````
