@@ -23,16 +23,17 @@ This project includes both the **frontend** and **backend** for the **Field Mapp
 ### Frontend Setup
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/your-username/field-mapping-system-frontend.git
    cd field-mapping-system-frontend
    ```
 
-````
-
 2. Install dependencies:
    ```bash
    npm install
+   ```
+
 ````
 
 3. Run the development server:
@@ -40,7 +41,6 @@ This project includes both the **frontend** and **backend** for the **Field Mapp
     npm run dev
    ```
 
-```
-
 4. Open your browser and visit http://localhost:5173 to see the frontend in action.
 ```
+````
