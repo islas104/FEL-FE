@@ -14,9 +14,7 @@ This project includes both the **frontend** and **backend** for the **Field Mapp
 
 ### Backend:
 
-- **FastAPI**: A modern and fast web framework for building APIs with Python.
-- **Field Management**: Store and retrieve field data, including coordinates for boundaries.
-- **Farmer Data**: Handle farmer information and their respective fields.
+- **FastAPI**: This is integrating with the pipeline-ingestion-api repo as that covers the backend
 
 ## Installation
 
