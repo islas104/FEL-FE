@@ -1,16 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import {
+    computed,
+    defineProps,
+} from 'vue';
 
-// Example farmer data
-const farmers = ref([
-  { id: 1, name: 'Islas' },
-  { id: 2, name: 'Laila' },
-  { id: 3, name: 'Maria' },
-]);
-
-// Role prop passed from parent
 const props = defineProps({
   role: String,
+  searchQuery: String,
+});
+
+// Sample farmer data
+const farmers = [
+  { id: 1, name: 'Islas' },
+  { id: 2, name: 'Maria' },
+  { id: 3, name: 'Laila' },
+];
+
+// Computed property for filtering
+const filteredFarmers = computed(() => {
+  return farmers.filter(f => f.name.toLowerCase().includes(props.searchQuery.toLowerCase()));
 });
 </script>
 
@@ -18,41 +26,20 @@ const props = defineProps({
   <aside class="sidebar">
     <h2>Farmers</h2>
     <ul>
-      <li v-for="farmer in farmers" :key="farmer.id">{{ farmer.name }}</li>
+      <li v-for="farmer in filteredFarmers" :key="farmer.id">{{ farmer.name }}</li>
     </ul>
 
-    <!-- Role-based content -->
-    <div v-if="role === 'Unlock Team'">
-      <p>You have full access to manage farmers and data.</p>
+    <div v-if="['Unlock Team', 'PU Manager', 'FF'].includes(role)">
+      <p><strong>Full access</strong> to manage data.</p>
+    </div>
+    <div v-else-if="role === 'Project Manager'">
+      <p><strong>Dashboard access</strong>, can visualize polygons.</p>
+    </div>
+    <div v-else-if="role === 'Auditor'">
+      <p><strong>View-only access</strong>.</p>
     </div>
     <div v-else>
-      <p>You can only view farmers' data.</p>
+      <p><strong>Dashboard visualization only</strong>.</p>
     </div>
   </aside>
 </template>
-
-<style scoped>
-.sidebar {
-  width: 250px;
-  background-color: #34495e;
-  color: white;
-  padding: 1rem;
-  height: 100vh;
-  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin: 10px 0;
-  font-size: 1rem;
-}
-</style>

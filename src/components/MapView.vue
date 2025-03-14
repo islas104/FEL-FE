@@ -2,62 +2,60 @@
 import 'leaflet/dist/leaflet.css';
 
 import {
+    defineProps,
     onMounted,
-    ref,
+    watch,
 } from 'vue';
 
 import L from 'leaflet';
 
-// Props passed from the parent component (MainLayout)
+// Props from MainLayout
 const props = defineProps({
-  role: String, // role passed from MainLayout
-  fields: Array, // dynamic data passed as fields
-  center: Array, // center of the map (latitude, longitude)
+  role: String,
+  fields: Array,
+  center: Array,
 });
 
-// Reactive map center point and fields (for dynamic behavior)
-const mapCenter = ref(props.center || [51.505, -0.09]);  // Default center if not passed
-const fields = ref(props.fields || []);  // Fields are dynamic
+let map;
 
-// Create a ref for the map instance
-let map = null;
-
-// Handle dynamic map rendering based on the role
+// Initialize map
 onMounted(() => {
-  map = L.map('map').setView(mapCenter.value, 13);
+  map = L.map('map').setView(props.center, 13);
 
-  // Add tile layer
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-  // Dynamically add polygons or other features to the map based on fields
-  fields.value.forEach((field) => {
+  renderPolygons();
+});
+
+// Function to render polygons dynamically
+const renderPolygons = () => {
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Polygon) map.removeLayer(layer);
+  });
+
+  props.fields.forEach((field) => {
     const polygon = L.polygon(field.boundary, {
-      color: role === 'Unlock Team' ? 'blue' : 'gray', // Blue for editable, gray for view-only
-      fillOpacity: 0.3,
+      color: props.role === 'Unlock Team' || props.role === 'PU Manager' || props.role === 'FF' ? 'blue' : 'gray',
+      fillOpacity: 0.5,
     }).addTo(map);
 
-    // If the role is Unlock Team, enable editing features
-    if (role === 'Unlock Team') {
-      polygon.on('click', (e) => {
-        alert(`You clicked on field with ID: ${field.id}`);
-        // Add additional functionality to allow editing, etc.
-      });
+    if (props.role === 'Unlock Team' || props.role === 'PU Manager' || props.role === 'FF') {
+      polygon.on('click', () => alert(`Editing Field ID: ${field.id}`));
     }
   });
+};
+
+// Watch role changes & update map dynamically
+watch(() => props.role, () => {
+  renderPolygons();
 });
 </script>
 
 <template>
   <div>
-    <!-- Conditionally render based on role -->
-    <div v-if="role === 'PU Manager' || role === 'FF' || role === 'Unlock Team'">
-      <div id="map" style="height: 100vh; width: 100%;"></div>
-      <p v-if="role === 'Unlock Team'">Interactive map: Full access to modify the map data.</p>
-      <p v-else>You can view the map and its fields.</p>
-    </div>
-    <div v-else>
-      <p>You do not have access to modify the map data.</p>
-    </div>
+    <div id="map"></div>
+    <p v-if="['Unlock Team', 'PU Manager', 'FF'].includes(role)">You can edit the fields.</p>
+    <p v-else>You have view-only access.</p>
   </div>
 </template>
 
@@ -65,12 +63,5 @@ onMounted(() => {
 #map {
   width: 100%;
   height: 100vh;
-  border: 2px solid #ddd; /* Adding a border for better visibility */
-}
-
-p {
-  font-size: 1rem;
-  color: #7f8c8d;
-  text-align: center;
 }
 </style>
