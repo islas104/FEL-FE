@@ -1,40 +1,60 @@
-# Field Mapping System - Frontend & Backend Integration
+# 🌍 Field Mapping System
 
-## Overview
+A **Vue 3 + Vite + Leaflet.js** application for managing **field boundaries, farmer data, and role-based access control**.
 
-This project includes both the **frontend** and **backend** for the **Field Mapping System**. The **frontend** is built using **Vue 3**, **TypeScript**, and **Leaflet.js**, while the **backend** is a **FastAPI** application. The system allows users to view and interact with field boundaries on an interactive map, providing a complete solution for managing field and farmer data.
+---
 
-## Features
+## 🚀 Features
 
-### Frontend:
+✅ **Interactive Map with Field Boundaries** – View & edit polygons for different roles.  
+✅ **Role-Based Access Control (RBAC)** – Fine-grained permissions for different user types.  
+✅ **Search & Filter Farmers and Fields** – Quickly locate information with an optimized search bar.  
+✅ **Seamless Role Switching** – Instantly change between user roles for testing & validation.  
+✅ **Sleek, Responsive UI** – Modern styling, smooth transitions, and intuitive navigation.  
+✅ **Multiple Data Layers** – Overlay support for **satellite imagery & flagged error reports** (coming soon).
 
-- **Interactive Map**: Display fields and farmer boundaries using **Leaflet.js**.
-- **Vue 3 + TypeScript**: Fast and efficient frontend using Vue 3 with TypeScript for type safety.
-- **Real-time Integration**: The frontend fetches field and farmer data from the FastAPI backend.
+---
 
-### Backend:
+## 🎭 Role-Based Access Control
 
-- **FastAPI**: This is integrating with the pipeline-ingestion-api repo as that covers the backend
+| **Role**                   | **Full Access** | **Dashboards** | **Edit Fields** | **View Only** | **Tracking** |
+| -------------------------- | :-------------: | :------------: | :-------------: | :-----------: | :----------: |
+| **Unlock Team**            |       ✅        |       ✅       |       ✅        |      ❌       |      ✅      |
+| **Better Cotton**          |       ❌        |       ✅       |       ❌        |      ❌       |      ❌      |
+| **Project Manager**        |       ❌        |       ✅       |       ❌        |      ✅       |      ✅      |
+| **PU Manager**             |       ✅        |       ✅       |       ✅        |      ❌       |      ✅      |
+| **Field Facilitator (FF)** |       ✅        |       ✅       |       ✅        |      ❌       |      ✅      |
+| **Auditor**                |       ❌        |       ❌       |       ❌        |      ✅       |      ✅      |
 
-## Installation
+---
 
-### Frontend Setup
+## 🛠 Installation & Setup
 
-1. Clone this repository:
+### 🔹 Prerequisites
 
-   ```bash
-   git clone https://github.com/your-username/field-mapping-system-frontend.git
-   cd field-mapping-system-frontend
-   ```
+Ensure you have the following installed:
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
+- **Node.js** (16+ recommended)
+- **npm** (or **yarn**)
+- **Vue 3** and **Vite**
 
-   ```bash
-    npm run dev
-   ```
+### 🔹 Clone the Repository
 
-4. Open your browser and visit http://localhost:5173 to see the frontend in action.
+```sh
+git clone https://github.com/islas104/Field-Mapping-System.git
+cd Field-Mapping-System
+```
+
+### 🔹 Install Dependencies
+
+```sh
+npm install
+```
+
+### 🔹 Run the Development Server
+
+```sh
+npm run dev
+```
+
+The app will be available at http://localhost:5173/.
