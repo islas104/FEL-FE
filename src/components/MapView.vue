@@ -9,59 +9,99 @@ import {
 
 import L from 'leaflet';
 
-// Props from MainLayout
 const props = defineProps({
-  role: String,
-  fields: Array,
-  center: Array,
+  role: {
+    type: String,
+    required: true
+  },
+  fields: {
+    type: Array,
+    required: true
+  },
+  center: {
+    type: Array,
+    required: true
+  }
 });
 
-let map;
+let map = null;
 
-// Initialize map
 onMounted(() => {
-  map = L.map('map').setView(props.center, 13);
+  // Initialize the map with basic options
+  map = L.map('map', { zoomControl: false }).setView(props.center, 13);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  // Add OpenStreetMap tile layer with attribution
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
   renderPolygons();
 });
 
-// Function to render polygons dynamically
+// Render polygons based on fields data
 const renderPolygons = () => {
+  // Remove any previously rendered polygons
   map.eachLayer((layer) => {
-    if (layer instanceof L.Polygon) map.removeLayer(layer);
+    if (layer instanceof L.Polygon) {
+      map.removeLayer(layer);
+    }
   });
 
+  // Define roles that have editing privileges
+  const editableRoles = ['Unlock Team', 'PU Manager', 'FF'];
+
+  // Render polygons for each field
   props.fields.forEach((field) => {
+    const isEditable = editableRoles.includes(props.role);
     const polygon = L.polygon(field.boundary, {
-      color: props.role === 'Unlock Team' || props.role === 'PU Manager' || props.role === 'FF' ? 'blue' : 'gray',
-      fillOpacity: 0.5,
+      color: isEditable ? 'blue' : 'gray',
+      fillOpacity: 0.5
     }).addTo(map);
 
-    if (props.role === 'Unlock Team' || props.role === 'PU Manager' || props.role === 'FF') {
-      polygon.on('click', () => alert(`Editing Field ID: ${field.id}`));
+    if (isEditable) {
+      polygon.on('click', () => {
+        alert(`Editing Field ID: ${field.id}`);
+      });
     }
   });
 };
 
-// Watch role changes & update map dynamically
+// Re-render polygons when the role changes
 watch(() => props.role, () => {
   renderPolygons();
 });
 </script>
 
 <template>
-  <div>
+  <div class="map-container">
     <div id="map"></div>
-    <p v-if="['Unlock Team', 'PU Manager', 'FF'].includes(role)">You can edit the fields.</p>
-    <p v-else>You have view-only access.</p>
+    <p class="access-message">
+      <span v-if="['Unlock Team', 'PU Manager', 'FF'].includes(role)">
+        You can edit the fields.
+      </span>
+      <span v-else>
+        You have view-only access.
+      </span>
+    </p>
   </div>
 </template>
 
 <style scoped>
+.map-container {
+  position: relative;
+}
 #map {
   width: 100%;
   height: 100vh;
+}
+.access-message {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 </style>
